@@ -14,6 +14,6 @@ if __name__ == '__main__':
         player.receive_cards(hands[i])
 
     for player in players:
-        print(f"{player} hat")
+        print(f"{player} hat:")
         for card in player.hand:
-            print(f"{card}")
+            print(f"\t{card}")

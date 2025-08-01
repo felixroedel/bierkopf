@@ -1,20 +1,20 @@
-from enum import IntEnum
+from enum import StrEnum
 
 
-class Rank(IntEnum):
-    OBER = 0
-    UNTER = 1
-    ASS = 2
-    KONIG = 3
-    ZEHN = 4
-    NEUN = 5
+class Rank(StrEnum):
+    OBER = "Ober"
+    UNTER = "Unter"
+    ASS = "Ass"
+    KONIG = "König"
+    ZEHN = "10"
+    NEUN = "9"
 
 
-class Suit(IntEnum):
-    EICHEL = 0
-    BLATT = 1
-    HERZ = 2
-    SCHELLE = 3
+class Suit(StrEnum):
+    EICHEL = "Eichel"
+    BLATT = "Blatt"
+    HERZ = "Herz"
+    SCHELLE = "Schelle"
 
 
 class Card:
@@ -23,4 +23,4 @@ class Card:
         self.rank: Rank = rank  # e.g. "Ass"
 
     def __repr__(self):
-        return f"{self.suit.name} {self.rank.name}"
+        return f"{self.suit} {self.rank}"
