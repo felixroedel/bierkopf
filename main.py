@@ -1,5 +1,6 @@
-from player import Player
-from rules import Rules, Stich
+from game_logic.player import Player
+from game_logic.rules import Rules
+from game_logic.stich import Stich
 
 if __name__ == '__main__':
     rules = Rules()

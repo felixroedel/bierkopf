@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from card import Card
-from card import Suit, Rank
-from player import Player
+from game_logic.card import Card
+from game_logic.card import Suit, Rank
+from game_logic.player import Player
 
-from rules import Rules, Stich
+from game_logic.rules import Rules, Stich
 
 
 class CardTestCase(TestCase):
@@ -67,7 +67,7 @@ class RulesTestCase(TestCase):
             Card(Suit.HERZ, Rank.OBER),
         ]
         led_card = Card(Suit.HERZ, Rank.ZEHN)
-        valid = self.rules.valid_moves(hand, led_card)
+        valid = self.rules.get_valid_moves(hand, led_card)
         self.assertIn(Card(Suit.HERZ, Rank.ASS), valid)
         self.assertIn(Card(Suit.HERZ, Rank.OBER), valid)
         self.assertNotIn(Card(Suit.EICHEL, Rank.ASS), valid)
@@ -80,7 +80,7 @@ class RulesTestCase(TestCase):
             Card(Suit.EICHEL, Rank.ZEHN)
         ]
         led_card = Card(Suit.EICHEL, Rank.KONIG)
-        valid = self.rules.valid_moves(hand, led_card)
+        valid = self.rules.get_valid_moves(hand, led_card)
         self.assertIn(Card(Suit.EICHEL, Rank.ASS), valid)
         self.assertIn(Card(Suit.EICHEL, Rank.ZEHN), valid)
         self.assertNotIn(Card(Suit.BLATT, Rank.ASS), valid)
@@ -89,8 +89,13 @@ class RulesTestCase(TestCase):
     def test_determine_winner_on_stich(self):
         player1 = Player("A")
         player2 = Player("B")
+        player3 = Player("C")
+        player4 = Player("D")
         stich = Stich(Card(Suit.HERZ, Rank.ASS), player1)
         stich.add_card(Card(Suit.HERZ, Rank.KONIG), player2)
-        winner, winning_card = self.rules.determine_winner_on_stich(stich)
+        stich.add_card(Card(Suit.BLATT, Rank.ZEHN), player3)
+        stich.add_card(Card(Suit.HERZ, Rank.NEUN), player4)
+        winner, winning_card, points = self.rules.determine_winner_on_stich(stich)
         self.assertEqual(winner, player1)
         self.assertEqual(winning_card, Card(Suit.HERZ, Rank.ASS))
+        self.assertEqual(points, 25)
