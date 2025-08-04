@@ -1,5 +1,5 @@
 from player import Player
-from rules import Rules
+from rules import Rules, Stich
 
 if __name__ == '__main__':
     rules = Rules()
@@ -17,3 +17,15 @@ if __name__ == '__main__':
         print(f"{player} hat:")
         for card in player.hand:
             print(f"\t{card}")
+
+    stich = Stich(player1.hand[0], player1)
+    stich.add_card(player2.hand[0], player2)
+    stich.add_card(player3.hand[0], player3)
+    stich.add_card(player4.hand[0], player4)
+
+    print("\nStich:")
+    for card, player in stich.played_cards.items():
+        print(f"\t{card} von {player}")
+
+    winning_player, winning_card = rules.determine_winner_on_stich(stich)
+    print(f"Gewinner: {winning_player} mit {winning_card}")

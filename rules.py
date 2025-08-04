@@ -6,10 +6,13 @@ from player import Player
 
 
 class Stich:
-    def __init__(self, first_played_card: Card):
+    def __init__(self, first_played_card: Card, player: Player):
         self.first_card_played: Card = first_played_card
         self.leading_suit: Suit = first_played_card.suit
-        self.played_cards: dict[Player, Card] = dict()
+        self.played_cards: dict[Card, Player] = {first_played_card: player}
+
+    def add_card(self, card: Card, player: Player):
+        self.played_cards[card] = player
 
 
 class Rules:
@@ -57,14 +60,16 @@ class Rules:
         return [self.deck[6 * i: 6 * (i + 1)] for i in range(4)]
 
     def get_trumps_order(self, card: Card):
-        return self.trump_order.index(card)
+        return self.trump_order[::-1].index(card)
 
     def get_card_rank_order(self, rank: Rank):
-        return self.rank_order.index(rank)
+        return self.rank_order[::-1].index(rank)
 
     def compare_cards(self, card1: Card, card2: Card, led_suit: Suit):
         trump_card1 = self.is_trump(card1)
         trump_card2 = self.is_trump(card2)
+        if card1 == card2:
+            raise ValueError("Both cards are equal, which should not happen in a valid game.")
         if trump_card1 and trump_card2:
             # both cards are trump, so the one with the higher order wins
             if self.get_trumps_order(card1) > self.get_trumps_order(card2):
@@ -79,7 +84,7 @@ class Rules:
             return card2
         else:
             # both cards are not trump, so leading suit decides
-            if card1 == led_suit and card2 == led_suit:
+            if card1.suit == led_suit and card2.suit == led_suit:
                 # both cards are of the leading suit, so the one with the higher rank wins
                 if self.get_card_rank_order(card1.rank) > self.get_card_rank_order(card2.rank):
                     return card1
@@ -95,12 +100,15 @@ class Rules:
                 # both cards are not of the leading suit, so the first card wins
                 return card1
 
-    def determine_winner_on_stich(self, stich: Stich):
+    def determine_winner_on_stich(self, stich: Stich) -> (Player, Card):
         led_suit: Suit = stich.leading_suit
-        winning_card: Card
+        winning_card: Card = stich.first_card_played
 
         # compare all played cards
-        pass
+        for challenging_card in stich.played_cards.keys():
+            if challenging_card != winning_card:
+                winning_card = self.compare_cards(winning_card, challenging_card, led_suit)
+        return stich.played_cards[winning_card], winning_card
 
     def valid_moves(self, hand: list[Card], led_card: Card):
         if not led_card:
@@ -118,7 +126,7 @@ class Rules:
             else:
                 # farbe angespielt
                 # led card is not a trump, so a card of the leading suit must be played if available
-                leading_suits_cards = [card for card in hand if card.suit == card.suit]
+                leading_suits_cards = [card for card in hand if card.suit == led_card.suit]
                 if leading_suits_cards:
                     return leading_suits_cards
                 else:
