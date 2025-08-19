@@ -51,9 +51,6 @@ class Rules:
         Rank.KONIG: 4,
         Rank.NEUN: 0,
     }
-    points_per_won_round = {
-
-    }
 
     @staticmethod
     def get_all_cards():

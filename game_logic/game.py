@@ -1,6 +1,9 @@
 from game_logic.player import Player
-from game_logic.round import Round
 from game_logic.team import Team
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from game_logic.round import Round
 
 
 class Game:
@@ -10,7 +13,8 @@ class Game:
         self.points: dict[Team, int] = {team: 0 for team in self.teams}
         self.player_to_play_first: Player = players_ordered[0]
 
-    def play_game(self) -> Team:
+    def play_game(self) -> "Team":
+        from game_logic.round import Round
         while not self.is_game_over():
             round: Round = Round(self, self.player_to_play_first)
             round.play_round()

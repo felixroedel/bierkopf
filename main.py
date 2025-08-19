@@ -20,13 +20,15 @@ if __name__ == '__main__':
             print(f"\t{card}")
 
     stich = Stich(player1.hand[0], player1)
-    stich.add_card(player2.hand[0], player2)
-    stich.add_card(player3.hand[0], player3)
-    stich.add_card(player4.hand[0], player4)
+    print(f"\nErster Spieler: {player1} spielt {stich.first_card_played}")
+    for player in players[1:]:
+        valid = Rules.get_valid_moves(player.hand, stich.first_card_played)
+        print(f"{player} kann spielen: {valid}")
+        stich.add_card(player.play_card(valid[0]), player)
 
     print("\nStich:")
     for card, player in stich.played_cards.items():
         print(f"\t{card} von {player}")
 
-    winning_player, winning_card = rules.determine_winner_on_stich(stich)
-    print(f"Gewinner: {winning_player} mit {winning_card}")
+    winning_player, winning_card, points = rules.determine_winner_on_stich(stich)
+    print(f"Gewinner: {winning_player} mit {winning_card} und {points} Punkten.")

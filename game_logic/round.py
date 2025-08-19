@@ -1,11 +1,13 @@
-from game_logic.game import Game
 from game_logic.player import Player
 from game_logic.rules import Rules
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from game_logic.game import Game
 
 class Round:
-    def __init__(self, game: Game, player_to_play_first: Player):
-        self.game: Game = game
+    def __init__(self, game: "Game", player_to_play_first: Player):
+        self.game: "Game" = game
         self.remaining_cards_in_deck = Rules.get_all_cards()
         self.player_in_turn: Player = player_to_play_first
 

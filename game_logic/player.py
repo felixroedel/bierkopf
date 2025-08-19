@@ -1,5 +1,4 @@
 from game_logic.card import Card
-from game_logic.rules import Rules
 
 
 class Player:
@@ -11,6 +10,7 @@ class Player:
         self.hand: list = cards
 
     def play_card(self, first_card_played: Card) -> Card:
+        from game_logic.rules import Rules
         # todo: implement agent logic
         valid_moves: list[Card] = Rules.get_valid_moves(self.hand, first_card_played)
         return valid_moves[0]
