@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from game_logic.card import Card
 from game_logic.card import Suit, Rank
-from game_logic.player import Player
+from game_logic.basicplayer import BasicPlayer
 
 from game_logic.rules import Rules, Stich
 
@@ -87,10 +87,10 @@ class RulesTestCase(TestCase):
         self.assertNotIn(Card(Suit.HERZ, Rank.OBER), valid)
 
     def test_determine_winner_on_stich(self):
-        player1 = Player("A")
-        player2 = Player("B")
-        player3 = Player("C")
-        player4 = Player("D")
+        player1 = BasicPlayer("A")
+        player2 = BasicPlayer("B")
+        player3 = BasicPlayer("C")
+        player4 = BasicPlayer("D")
         stich = Stich(Card(Suit.HERZ, Rank.ASS), player1)
         stich.add_card(Card(Suit.HERZ, Rank.KONIG), player2)
         stich.add_card(Card(Suit.BLATT, Rank.ZEHN), player3)
@@ -99,3 +99,4 @@ class RulesTestCase(TestCase):
         self.assertEqual(winner, player1)
         self.assertEqual(winning_card, Card(Suit.HERZ, Rank.ASS))
         self.assertEqual(points, 25)
+

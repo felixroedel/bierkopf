@@ -5,11 +5,12 @@ import numpy as np
 
 from game_logic.card import Card, Suit
 from game_logic.card import Rank
-from game_logic.player import Player
+from game_logic.basicplayer import BasicPlayer
 from game_logic.stich import Stich
 
 
 class Multiplier(IntEnum):
+    NORMAL = 1
     # multiplier given by players
     SPRITZ = 2
     RE = 3
@@ -21,8 +22,9 @@ class Multiplier(IntEnum):
 
 
 class Rules:
+    logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     trump_order = [
         Card(Suit.EICHEL, Rank.OBER),
         Card(Suit.BLATT, Rank.OBER),
@@ -111,7 +113,7 @@ class Rules:
                 return card1
 
     @staticmethod
-    def determine_winner_on_stich(stich: Stich) -> (Player, Card, int):
+    def determine_winner_on_stich(stich: Stich) -> (BasicPlayer, Card, int):
         led_suit: Suit = stich.leading_suit
         winning_card: Card = stich.first_card_played
         points: int = 0
@@ -151,3 +153,19 @@ class Rules:
     @staticmethod
     def get_points(card: Card):
         return Rules.points_per_card[card.rank]
+
+    @staticmethod
+    def update_who_is_in_turn(current_player: BasicPlayer, ordered_players: list[BasicPlayer]) -> BasicPlayer:
+        current_index: int = ordered_players.index(current_player)
+        next_index: int = (current_index + 1) % len(ordered_players)
+        return ordered_players[next_index]
+
+    @staticmethod
+    def get_game_points(round_points: int, multiplier: Multiplier) -> int:
+        game_points = 1 * multiplier
+        if round_points == 120:
+            return game_points * Multiplier.SCHWARZ.value
+        elif round_points >= 90:
+            return game_points * Multiplier.SCHNEIDER.value
+        else:
+            return game_points
